@@ -3,6 +3,7 @@ import cv2
 import os, os.path
 import math
 from tensorflow.keras import backend as K
+from sklearn.feature_extraction.image import extract_patches
 
 
 def bicubic_psnr(input):
@@ -80,17 +81,30 @@ def ycbcr2rgb(im):
 
 
 def sample(image, sample_size, stride):
-    sampled_image = []
-    for i in range((image.shape[0] - sample_size) // stride):
-        for j in range((image.shape[1] - sample_size) // stride):
-            sampled_image.append(image[i * stride:i * stride + sample_size, j * stride: j * stride + sample_size, :])
+    '''
+    :param image: a 2d image with (height, width, channels)
+    :param sample_size: sample size for output sample (sample_size, sample_size, channels)
+    :param stride: stride for cropping (stride, stride , channel)
+    :return: sampled_image with size (sample_count,sample_size,sample_size,channels)
+    '''
+    patch_size = (sample_size, sample_size, image.shape[-1])
+    stride_size = (stride, stride, image.shape[-1])
+    sampled_image = extract_patches(image, patch_size, stride_size).reshape([-1] + list(patch_size))
     return sampled_image
 
 
 def preprocessing(image, train=True, sample_size=32, stride=14):
+    '''
+
+    :param image: a 2d image with (height, width, channels)
+    :param train: is to be trained or not
+    :param sample_size: sample size for output sample (sample_size, sample_size, channels)
+    :param stride: stride for cropping (stride, stride , channel)
+    :return:
+    '''
     data = rgb2ycbcr(image)
     if train:
-        data = sample(data, sample_size, stride)
+        data = sample(np.array(data), sample_size, stride)
     return data
 
 
