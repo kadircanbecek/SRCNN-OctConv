@@ -5,7 +5,7 @@ from tensorflow.keras import Input, Model
 from tensorflow.keras.layers import Conv2D, AveragePooling2D, UpSampling2D, add
 
 import utils
-from customGenerator import My_Custom_Generator
+from SRCNNGenerator import SRCNNGenerator
 
 
 class OctConvInitialLayer(Layer):

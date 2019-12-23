@@ -173,6 +173,6 @@ if __name__ == '__main__':
 
     x = finalOctConvLayer(xh, xl, filters=1, kernel_size=(5, 5))
 
-    model = Model(ip, x)
-    model.summary()
+    srcnn_model = Model(ip, x)
+    srcnn_model.summary()
 
