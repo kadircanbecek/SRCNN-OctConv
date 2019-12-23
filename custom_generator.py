@@ -25,9 +25,9 @@ class SRCNNGenerator(keras.utils.Sequence):
     def __getitem__(self, idx):
         # print('idx ', idx)
         batch_x = self.image_filenames[idx * self.batch_size: (idx + 1) * self.batch_size]
-        image_x_raw = utils.read_data(batch_x)
+        image_x_raw = utils.read_data(path_list=batch_x)
         batch_y = self.label_names[idx * self.batch_size: (idx + 1) * self.batch_size]
-        image_y_raw = utils.read_data(batch_y)
+        image_y_raw = utils.read_data(path_list=batch_y)
         image_x = []
         image_y = []
         for i in range(len(batch_x)):

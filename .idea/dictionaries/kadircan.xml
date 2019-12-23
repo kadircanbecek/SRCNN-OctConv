@@ -2,7 +2,12 @@
   <dictionary name="kadircan">
     <words>
       <w>bicubic</w>
+      <w>ckpt</w>
+      <w>conv</w>
+      <w>preprocessing</w>
       <w>psnr</w>
+      <w>srcnn</w>
+      <w>ycbcr</w>
     </words>
   </dictionary>
 </component>

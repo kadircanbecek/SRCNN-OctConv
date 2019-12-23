@@ -5,10 +5,31 @@ from tensorflow.keras import Input, Model
 from tensorflow.keras.layers import Conv2D, AveragePooling2D, UpSampling2D, add
 
 import utils
-from SRCNNGenerator import SRCNNGenerator
+from custom_generator import SRCNNGenerator
 
 
 class OctConvInitialLayer(Layer):
+    """
+                Initializes the Octave Convolution architecture.
+                Accepts a single input tensor, and returns a pair of tensors.
+                The first tensor is the high frequency pathway.
+                The second tensor is the low frequency pathway.
+                # Arguments:
+                    ip: keras tensor.
+                    filters: number of filters in conv layer.
+                    kernel_size: conv kernel size.
+                    strides: strides of the conv.
+                    alpha: float between [0, 1]. Defines the ratio of filters
+                        allocated to the high frequency and low frequency
+                        branches of the octave conv.
+                    padding: padding mode.
+                    dilation: dilation conv kernel.
+                    bias: bool, whether to use bias or not.
+                # Returns:
+                    a pair of tensors:
+                        - x_high: high frequency pathway.
+                        - x_low: low frequency pathway.
+                """
     def __init__(self, filters, kernel_size=(3, 3), strides=(1, 1),
                  alpha=0.5, padding='same', dilation=None, bias=False, activation="relu"):
         super(OctConvInitialLayer, self).__init__()
@@ -35,6 +56,28 @@ class OctConvInitialLayer(Layer):
 
 
 class OctConvBlockLayer(Layer):
+    """
+            Constructs an Octave Convolution block.
+            Accepts a pair of input tensors, and returns a pair of tensors.
+            The first tensor is the high frequency pathway for both ip/op.
+            The second tensor is the low frequency pathway for both ip/op.
+            # Arguments:
+                self.x_high: keras tensor.
+                self.x_low: keras tensor.
+                filters: number of filters in conv layer.
+                kernel_size: conv kernel size.
+                strides: strides of the conv.
+                alpha: float between [0, 1]. Defines the ratio of filters
+                    allocated to the high frequency and low frequency
+                    branches of the octave conv.
+                padding: padding mode.
+                dilation: dilation conv kernel.
+                bias: bool, whether to use bias or not.
+            # Returns:
+                a pair of tensors:
+                    - x_high: high frequency pathway.
+                    - x_low: low frequency pathway.
+            """
     def __init__(self, filters, kernel_size=(3, 3), strides=(1, 1),
                  alpha=0.5, padding='same', dilation=None, bias=False, activation="relu"):
         super(OctConvBlockLayer, self).__init__()
@@ -80,6 +123,24 @@ class OctConvBlockLayer(Layer):
 
 
 class OctConvFinalLayer(Layer):
+    """
+            Ends the Octave Convolution architecture.
+            Accepts two input tensors, and returns a single output tensor.
+            The first input tensor is the high frequency pathway.
+            The second input tensor is the low frequency pathway.
+            # Arguments:
+                self.x_high: keras tensor.
+                self.x_low: keras tensor.
+                filters: number of filters in conv layer.
+                kernel_size: conv kernel size.
+                strides: strides of the conv.
+                padding: padding mode.
+                dilation: dilation conv kernel.
+                bias: bool, whether to use bias or not.
+            # Returns:
+                a single Keras tensor:
+                    - x_high: The merged high frequency pathway.
+            """
     def __init__(self, filters, kernel_size=(3, 3), strides=(1, 1),
                  padding='same', dilation=None, bias=False, activation="relu"):
         super(OctConvFinalLayer, self).__init__()
